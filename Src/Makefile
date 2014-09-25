@@ -1,0 +1,93 @@
+.SUFFIXES	: .y .c .h .o .gs
+OBJECTS		= storage.o input.o static.o type.o compiler.o
+IOBJECTS	= gofer.o builtin.o  machine.o output.o $(OBJECTS)
+COBJECTS	= gofc.o cbuiltin.o cmachine.o $(OBJECTS)
+
+#----------------------------------------------------------------------------
+#
+# This file was chanced for compilation under OS/2 Warp with GCC+emx
+#
+# Michael Zimmermann, 18.Oct.95, MiZimm@pool.informatik.rwth-aachen.de
+#
+#----------------------------------------------------------------------------
+
+# Edit the following settings as required.
+# There are two choices of command line editor that can be used with Gofer:
+#
+#  GNU readline:		usual GNU sources (e.g. bash distribution)
+#  add -DUSE_READLINE=1 to CFLAGS and libreadline.a -ltermcap to LDFLAGS
+#				      (or maybe -lreadline -ltermcap)
+#
+#  editline:			(comp.sources.misc, vol 31, issue 71)
+#  add -DUSE_READLINE=1 to CFLAGS and libedit.a to LDFLAGS
+#				      (or maybe -ledit)
+#
+# The best bet is to `touch prelude.h' after changing these settings to
+# ensure that the whole collection of files is recompiled with the correct
+# settings.
+
+# IMPORTANT: make sure that you use the same compiler to build gofc
+# executables (often by setting an appropriate value in the gofcc script)
+# as you use to build the file runtime.o (as specified by the CC macro
+# below).
+
+CC		= gcc
+#CFLAGS		= -DUSE_READLINE=1
+CFLAGS		= -Zexe
+LDFLAGS    	= -lm
+OPTFLAGS	= -O
+OPT1		=
+#OPT1		= -O1
+
+all		: gofer gofc runtime.o
+
+gofer		: $(IOBJECTS)
+		  $(CC) $(CFLAGS) $(OPTFLAGS) $(IOBJECTS) -o gofer $(LDFLAGS)
+		  emxbind -s gofer.exe
+
+gofc		: $(COBJECTS)
+		  $(CC) $(CFLAGS) $(OPTFLAGS) $(COBJECTS) -o gofc $(LDFLAGS)
+		  emxbind -s gofc.exe
+
+.c.o		:
+		  $(CC) -c $(CFLAGS) $(OPTFLAGS) $<
+
+clean		:
+		  -del *.o $(TESTS)
+
+install		:
+		  -move gofer.exe ..
+
+.gs		:
+		  ./gofc $*.gs
+		  $(CC) $(OPTFLAGS) $*.c runtime.o -o $*.exe $(LDFLAGS)
+		  -del $*.c
+		  emxbind -s $*.exe
+
+.gp		:
+		  ./gofc + $*.gp
+		  $(CC) $(OPTFLAGS) $*.c runtime.o -o $*.exe $(LDFLAGS)
+		  -del $*.c
+		  emxbind -s $*.exe
+
+parser.c	: parser.y
+		  yacc parser.y
+		  -move y.tab.c parser.c
+
+gofer.o		: prelude.h storage.h connect.h errors.h \
+		  command.h machdep.c commonui.c
+gofc.o		: prelude.h storage.h connect.h errors.h \
+		  command.h machdep.c commonui.c output.c
+runtime.o	: prelude.h gofc.h machdep.c markscan.c twospace.c
+storage.o	: prelude.h storage.h connect.h errors.h
+input.o		: prelude.h storage.h connect.h errors.h parser.c command.h
+static.o	: prelude.h storage.h connect.h errors.h scc.c
+type.o		: prelude.h storage.h connect.h errors.h preds.c kind.c subst.c
+output.o	: prelude.h storage.h connect.h errors.h
+compiler.o	: prelude.h storage.h connect.h errors.h
+		  $(CC) -c $(OPT1) $(CFLAGS) compiler.c
+machine.o	: prelude.h storage.h connect.h errors.h
+cmachine.o	: prelude.h storage.h connect.h errors.h
+		  $(CC) -c $(OPT1) $(CFLAGS) cmachine.c
+builtin.o	: prelude.h storage.h connect.h errors.h prims.c
+cbuiltin.o	: prelude.h storage.h connect.h errors.h prims.c

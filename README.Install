@@ -1,0 +1,37 @@
+How to install the OS/2 version of Gofer v2.30
+----------------------------------------------
+
+1) Unzip gofer230.zip into the directory \Progs\Gofer. (use Info-unzip)
+   The file gofer230.zip already contains the correct directory structure.
+   Other directories than this require a re-compilation of Gofer!
+
+2) The emx-package must be installed (e.g. the file emx.dll must be in a
+   directory named in the LIBPATH-statement of your CONFIG.SYS)
+   If emx isn't installed yet, get the file emxrt.zip and install the
+   emx-runtime package following the instruction in the readme-file.
+   How to get emxrt.zip:
+     Try ftp://ftp-os2.nmsu.edu
+      or ftp://ftp.uni-stuttgart.de/pub/systems/os2/emx-0.9a/emxrt.zip
+
+3) Edit your CONFIG.SYS (make a copy FIRST!) and add the gofer-directory to
+   the PATH-statement:
+       SET PATH=...;\Progs\Gofer;...(something else)
+   Add the following statements:
+       SET SHELL=\os2\cmd.exe
+       SET GOFER=\Progs\Gofer\Lib\standard.prelude
+     (The variable SHELL must point to the correct location of your OS/2
+      command-interpreter, usually cmd.exe)
+   If you want to use your own editor (Gofer takes tedit.exe as default)
+   spezify it by adding the statement:
+       SET EDITOR=\mydirectory\myeditor.exe
+   NOTE: Users of OS/2 versions < 3 MUST specify this EDITOR variable, because
+         tedit.exe is delived with OS/2 Warp (version 3) only!
+
+4) reboot your system to let the changes take effect.
+
+5) Have fun with your Gofer-system!
+   Use 'gofer' to start the interpreter and 'gofc' to use the gofer->c
+   generator ...
+
+-----
+Michael Zimmmermann, Aachen (Germany)

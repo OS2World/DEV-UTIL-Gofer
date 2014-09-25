@@ -1,0 +1,28 @@
+       OS/2 Upload Information Template for ftp-os2.nmsu.edu
+
+Archive Name:
+   gofer230.zip
+
+Program Description: (keep it under 60 characters)
+   Functional programming environment (Gofer is a derivate of Haskell)
+   with interpreter and C-Code generator, version 2.30a
+   req. emxrt.zip!
+
+Operating System Versions:
+   OS/2 Warp or OS/2 2.x with an editor named tedit.exe
+
+Program Source:
+   Gofer is free, writen by Mark P Jones
+   compiled for OS/2 by Michael Zimmermann
+
+Replaces:
+   -
+
+Your name:
+   Michael Zimmermann
+
+Your email address:
+   MiZimm@Pool.Informatik.RWTH-Aachen.de
+
+Proposed directory for placement:
+   /os2/programming
